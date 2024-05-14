@@ -18,11 +18,46 @@ public class Empleado {
         this.servicio = servicio;
         this.turnicidad = turnicidad;
     }
+    
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public char getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(char categoria) {
+        this.categoria = categoria;
+    }
+
+    public String getNombreCompleto() {
+        return nombreCompleto;
+    }
+
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
+    }
+
+    public String getServicio() {
+        return servicio;
+    }
+
+    public void setServicio(String servicio) {
+        this.servicio = servicio;
+    }
+
+    public boolean isTurnicidad() {
+        return turnicidad;
+    }
+
+    public void setTurnicidad(boolean turnicidad) {
+        this.turnicidad = turnicidad;
+    }
 
     @Override
     public String toString() {
         // TODO Auto-generated method stub
-        return servicio + "\t" + codigo + "\t" + nombreCompleto;
+        return "\t" + codigo + "\t" + nombreCompleto;
     }
-
 }
