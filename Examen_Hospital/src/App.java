@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class App extends Entrada_Salida{
     //Colores para el texto
@@ -9,7 +11,7 @@ public class App extends Entrada_Salida{
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_RED = "\u001B[31m";
 
-    private static HashMap<String, Integer> sueldosBase = new HashMap<>();
+    private static HashMap<Character, Integer> sueldosBase = new HashMap<>();
     private static HashMap<String, Integer> suplementos = new HashMap<>();
 
     public static ArrayList<Empleado> empleados = new ArrayList<>();
@@ -20,17 +22,21 @@ public class App extends Entrada_Salida{
 
     //Métodos para precargar los hashmap
     public static String precargaHashMaps(){
-        sueldosBase.put("A", 2000);
-        sueldosBase.put("B", 1800);
-        sueldosBase.put("C", 1500);
+        sueldosBase.put('A', 2000);
+        sueldosBase.put('B', 1800);
+        sueldosBase.put('C', 1500);
         suplementos.put("Trasplantes", 15);
         suplementos.put("Cirugia", 10);
         suplementos.put("Quemados", 5);
         return "Precarga Completada";
     }
 
-    public static int calcularSueldo(char categoria ){
-        return 1;
+    public static double calcularSueldo(char categoria, int numeroGuardiasMedico){
+        double salario = sueldosBase.get(categoria);
+        if (categoria == 'A') {
+            salario+= n
+        }
+        return salario;
     }
 
     public static Empleado generarEmpleado(char categoria, String nombreCompleto, String servicio, boolean turnicidad){
@@ -65,16 +71,6 @@ public class App extends Entrada_Salida{
         return codigo;
     }
 
-    public static int mostrarNumeroEmpleadosCategoria(char categoria){
-        int numeroEmpleados = 0;
-        for (Empleado e : empleados) {
-            if (e.getCategoria()==categoria) {
-                numeroEmpleados++;
-            }
-        }
-        return numeroEmpleados;
-    }
-
     //Controlador para que no muestre directamente 200 empleados, qye vaya de 7 en 7 mostrando
     public static String controladorObjetos(){
         System.out.println(ANSI_GREEN + "Presione Enter para continuar." + ANSI_RESET);
@@ -82,8 +78,9 @@ public class App extends Entrada_Salida{
     }
 
     public static void listarEmpleados(){
+        System.out.println("Lista Empleados: ");
         int controladorCatalogo = 0;
-        int posicion = 1;
+        int posicion = 0;
         for (Empleado e : empleados) {
             if (controladorCatalogo == 6) {
                 System.out.println(posicion + e.toString());
@@ -115,9 +112,9 @@ public class App extends Entrada_Salida{
     }
     public static void main(String[] args) throws Exception {
         //Anti-Hardcoding
-        empleados.add(new Medico("A100000", 'A', "Ivan", "Dermatología", true, 0));
-        empleados.add(new Enfermeros("B200000", 'B', "Daniela", "Oftalmología", false));
+        empleados.add(new Enfermeros("B200000", 'B', "Mayra", "Oftalmología", false));
         empleados.add(new Auxiliares("C300000", 'C', "Yoana", "Dermatología", true, false));
+        empleados.add(new Medico("A100000", 'A', "Ivan", "Dermatología", true, 0));
 
         System.out.println(ANSI_GREEN + precargaHashMaps() + ANSI_RESET);
         int eleccion;
@@ -148,30 +145,28 @@ public class App extends Entrada_Salida{
                     }
                     break;
                 case 2:
-                    System.out.println("Lista Empleados: ");
                     listarEmpleados();
                     controladorObjetos();
                     break;
                 case 3:
-                    System.out.println("Nº de Empleados: " + empleados.size());
+                    System.out.println("Nº de Empleados: " + Empleado.getContadorEmpleados());
                     controladorObjetos();
                     break;
                 case 4:
-                    System.out.println("Nº de Médic@s: " + mostrarNumeroEmpleadosCategoria('A'));
-                    System.out.println("Nº de Enfermer@s: " + mostrarNumeroEmpleadosCategoria('B'));
-                    System.out.println("Nº de Auxiliares: " + mostrarNumeroEmpleadosCategoria('C'));
+                    System.out.println("Nº de Médic@s: " + Medico.getContadorMedico());
+                    System.out.println("Nº de Enfermer@s: " + Enfermeros.getContadorEnfermeros());
+                    System.out.println("Nº de Auxiliares: " + Auxiliares.getcontadorAuxiliares());
                     controladorObjetos();
                     break;
                 case 5:
                     System.out.println("Introduzca el código del empleado:");
                     String empleadoBuscar = devolverString();
-                    Iterator<Empleado> iterador = empleados.iterator();
                     int posicion = 0;
                     boolean encontrado = false;
-                    while (iterador.hasNext()) {  //Aqui estamos, arreglando el bucle
+                    for (Empleado e : empleados) {
                         posicion++;
-                        if (iterador.next().getCodigo().equalsIgnoreCase(empleadoBuscar)) {
-                            System.out.println(posicion + " " + iterador.next().toString() + averiguarCategoria(iterador.next().getCategoria()));
+                        if (e.getCodigo().equalsIgnoreCase(empleadoBuscar)) {
+                            System.out.println(posicion + " " + e.toString() + "\n" + averiguarCategoria(e.getCategoria()));
                             encontrado = true;
                         }
                     }
@@ -181,13 +176,48 @@ public class App extends Entrada_Salida{
                     controladorObjetos();
                     break;
                 case 6:
-
+                    listarEmpleados();
+                    System.out.println("Introduzca la posición del empleado a eliminar:");
+                    int eliminarEmpleado=devolverInt();
+                    if (eliminarEmpleado >= 0 && eliminarEmpleado < empleados.size()) {
+                        System.out.println(averiguarCategoria(empleados.get(eliminarEmpleado).getCategoria()) + " eliminado.");
+                        empleados.remove(eliminarEmpleado);
+                    }else{
+                        System.out.println("Posición Incorrecta.");
+                    }
                     break;
                 case 7:
-
+                    Comparator<Empleado> comparadorCodigo = Comparator.comparing(Empleado::getCodigo);
+                    listarEmpleados();
                     break;
                 case 8:
-
+                    System.out.println("Lista Empleados");
+                    int controladorCatalogo = 0;
+                    int posicionEmpleados = 0;
+                    for (Empleado e : empleados) {
+                        if (e.getCategoria()=='A') {
+                            if (controladorCatalogo == 6) {
+                                System.out.println(posicionEmpleados + e.toString());
+                                posicionEmpleados++;
+                                controladorObjetos();
+                                controladorCatalogo = 0;
+                            }else{
+                                controladorCatalogo++;
+                            }
+                        } else{
+                            posicionEmpleados++;
+                        }
+                    }
+                    System.out.println("Introduzca la posición del médic@");
+                    int posicionMedico = devolverInt();
+                    if (posicionMedico >= 0 && posicionMedico < empleados.size()) {
+                        System.out.println("Introduzca el nuevo nº de guardias:");
+                        int nuevasGuardias = devolverInt();
+                        Medico medicoReemplazado = new Medico(empleados.get(posicionMedico).getCodigo(), empleados.get(posicionMedico).getCategoria(), empleados.get(posicionMedico).getNombreCompleto(), empleados.get(posicionMedico).getServicio(), empleados.get(posicionMedico).isTurnicidad(), nuevasGuardias);
+                        empleados.set(posicionMedico, medicoReemplazado);
+                    }else{
+                        System.out.println("Posición Incorrecta.");
+                    }
                     break;
                 case 9:
                     System.out.println("Saliendo del Sistema Gestor de Empleados.");
@@ -197,8 +227,5 @@ public class App extends Entrada_Salida{
                     break;
             }
         } while (eleccion!=9);
-        
-        
-
     }
 }

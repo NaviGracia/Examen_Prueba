@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -10,13 +9,17 @@ public class Empleado {
     private String nombreCompleto;
     private String servicio;
     private boolean turnicidad;
-    
-    public Empleado(String codigo, char categoria, String nombreCompleto, String servicio, boolean turnicidad) {
+    private double sueldo;
+    private static int contadorEmpleados;
+
+    public Empleado(String codigo, char categoria, String nombreCompleto, String servicio, boolean turnicidad, double sueldo) {
         this.codigo = codigo;
         this.categoria = categoria;
         this.nombreCompleto = nombreCompleto;
         this.servicio = servicio;
         this.turnicidad = turnicidad;
+        this.sueldo = sueldo;
+        contadorEmpleados++;
     }
     
     public String getCodigo() {
@@ -53,6 +56,14 @@ public class Empleado {
 
     public void setTurnicidad(boolean turnicidad) {
         this.turnicidad = turnicidad;
+    }
+
+    public static int getContadorEmpleados() {
+        return contadorEmpleados;
+    }
+
+    public static void setContadorEmpleados(int contadorEmpleados) {
+        Empleado.contadorEmpleados = contadorEmpleados;
     }
 
     @Override
