@@ -10,6 +10,7 @@ public class Empleado {
     private String servicio;
     private boolean turnicidad;
     private double sueldo;
+
     private static int contadorEmpleados;
 
     public Empleado(String codigo, char categoria, String nombreCompleto, String servicio, boolean turnicidad, double sueldo) {
@@ -64,6 +65,14 @@ public class Empleado {
 
     public static void setContadorEmpleados(int contadorEmpleados) {
         Empleado.contadorEmpleados = contadorEmpleados;
+    }
+
+    public double getSueldo() {
+        return sueldo;
+    }
+
+    public void setSueldo(double sueldo) {
+        this.sueldo = sueldo;
     }
 
     @Override

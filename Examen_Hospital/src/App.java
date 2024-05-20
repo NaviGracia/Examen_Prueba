@@ -31,10 +31,19 @@ public class App extends Entrada_Salida{
         return "Precarga Completada";
     }
 
-    public static double calcularSueldo(char categoria, int numeroGuardiasMedico){
+    public static double calcularSueldo(int guardiasMedico, char categoria, boolean turnicidad, boolean discapacidad){
         double salario = sueldosBase.get(categoria);
-        if (categoria == 'A') {
-            salario+= n
+        if (turnicidad == true) {
+            salario+=(salario*5)/100;
+        }
+        switch (categoria) {
+            case 'A':      
+                salario+= guardiasMedico * 30;       
+                break;
+            case 'C':
+            if (turnicidad == true) {
+                salario+=(salario*3)/100;
+            }
         }
         return salario;
     }
@@ -42,13 +51,13 @@ public class App extends Entrada_Salida{
     public static Empleado generarEmpleado(char categoria, String nombreCompleto, String servicio, boolean turnicidad){
         switch (categoria) {
             case 'A':
-                return new Medico(generarCodigo(categoria), categoria, nombreCompleto, servicio, turnicidad, 0);
+                return new Medico(generarCodigo(categoria), categoria, nombreCompleto, servicio, turnicidad, sueldosBase.get(categoria), 0);
             case 'B':
-                return new Enfermeros(generarCodigo(categoria), categoria, nombreCompleto, servicio, turnicidad);
+                return new Enfermeros(generarCodigo(categoria), categoria, nombreCompleto, servicio, turnicidad, sueldosBase.get(categoria));
             default:
                 System.out.println("Discapacidad (true o false):");
                 boolean discapacidad = devolverBoolean();
-                return new Auxiliares(generarCodigo(categoria), categoria, nombreCompleto, servicio, turnicidad, discapacidad);
+                return new Auxiliares(generarCodigo(categoria), categoria, nombreCompleto, servicio, turnicidad, sueldosBase.get(categoria), discapacidad);
         }
     }
 
@@ -112,9 +121,9 @@ public class App extends Entrada_Salida{
     }
     public static void main(String[] args) throws Exception {
         //Anti-Hardcoding
-        empleados.add(new Enfermeros("B200000", 'B', "Mayra", "Oftalmología", false));
-        empleados.add(new Auxiliares("C300000", 'C', "Yoana", "Dermatología", true, false));
-        empleados.add(new Medico("A100000", 'A', "Ivan", "Dermatología", true, 0));
+        empleados.add(new Enfermeros("B200000", 'B', "Mayra", "Oftalmología", false, calcularSueldo('B')));
+        empleados.add(new Auxiliares("C300000", 'C', "Yoana", "Oftalmología", false, calcularSueldo('C'), false));
+        empleados.add(new Medico("A100000", 'A', "Ivan", "Dermatología", false, calcularSueldo('A'), 0));
 
         System.out.println(ANSI_GREEN + precargaHashMaps() + ANSI_RESET);
         int eleccion;
@@ -213,7 +222,7 @@ public class App extends Entrada_Salida{
                     if (posicionMedico >= 0 && posicionMedico < empleados.size()) {
                         System.out.println("Introduzca el nuevo nº de guardias:");
                         int nuevasGuardias = devolverInt();
-                        Medico medicoReemplazado = new Medico(empleados.get(posicionMedico).getCodigo(), empleados.get(posicionMedico).getCategoria(), empleados.get(posicionMedico).getNombreCompleto(), empleados.get(posicionMedico).getServicio(), empleados.get(posicionMedico).isTurnicidad(), nuevasGuardias);
+                        Medico medicoReemplazado = new Medico(empleados.get(posicionMedico).getCodigo(), empleados.get(posicionMedico).getCategoria(), empleados.get(posicionMedico).getNombreCompleto(), empleados.get(posicionMedico).getServicio(), empleados.get(posicionMedico).isTurnicidad(), calcularSueldo(empleados.get(posicionMedico).getCategoria()), nuevasGuardias);
                         empleados.set(posicionMedico, medicoReemplazado);
                     }else{
                         System.out.println("Posición Incorrecta.");
