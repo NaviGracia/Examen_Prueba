@@ -51,7 +51,9 @@ public class App extends Entrada_Salida{
     public static Empleado generarEmpleado(char categoria, String nombreCompleto, String servicio, boolean turnicidad){
         switch (categoria) {
             case 'A':
-                return new Medico(generarCodigo(categoria), categoria, nombreCompleto, servicio, turnicidad, sueldosBase.get(categoria), 0);
+                System.out.println("Nº de Guardias Real:");
+                int numeroGuardias = devolverInt();
+                return new Medico(generarCodigo(categoria), categoria, nombreCompleto, servicio, turnicidad, calcularSueldo(categoria, categoria, turnicidad, turnicidad), 0);
             case 'B':
                 return new Enfermeros(generarCodigo(categoria), categoria, nombreCompleto, servicio, turnicidad, sueldosBase.get(categoria));
             default:
@@ -121,9 +123,9 @@ public class App extends Entrada_Salida{
     }
     public static void main(String[] args) throws Exception {
         //Anti-Hardcoding
-        empleados.add(new Enfermeros("B200000", 'B', "Mayra", "Oftalmología", false, calcularSueldo('B')));
-        empleados.add(new Auxiliares("C300000", 'C', "Yoana", "Oftalmología", false, calcularSueldo('C'), false));
-        empleados.add(new Medico("A100000", 'A', "Ivan", "Dermatología", false, calcularSueldo('A'), 0));
+        empleados.add(new Enfermeros(generarCodigo('B'), 'B', "Mayra", "Oftalmología", false, calcularSueldo(0, 'B', false, false)));
+        empleados.add(new Auxiliares(generarCodigo('C'), 'C', "Yoana", "Dentista", true, calcularSueldo(0, 'C', true, false), false));
+        empleados.add(new Medico("A100000", 'A', "Ivan", "Dermatología", false, calcularSueldo(2, 'A', true, false), 0));
 
         System.out.println(ANSI_GREEN + precargaHashMaps() + ANSI_RESET);
         int eleccion;
@@ -144,11 +146,7 @@ public class App extends Entrada_Salida{
                         String servicio = devolverString();
                         System.out.println("Tiene turnicidad (true o false):");
                         boolean turnicidad = devolverBoolean();
-                        if (categoria != 'A' || categoria != 'B' || categoria != 'C') {
-                            empleados.add(generarEmpleado(categoria, nombreCompleto, servicio, turnicidad));   
-                        }else{
-                            System.out.println("Nº Incorrecto");
-                        }
+                        empleados.add(generarEmpleado(categoria, nombreCompleto, servicio, turnicidad));   
                     }else{
                         System.out.println("Categoría Incorrecta");
                     }
@@ -222,7 +220,7 @@ public class App extends Entrada_Salida{
                     if (posicionMedico >= 0 && posicionMedico < empleados.size()) {
                         System.out.println("Introduzca el nuevo nº de guardias:");
                         int nuevasGuardias = devolverInt();
-                        Medico medicoReemplazado = new Medico(empleados.get(posicionMedico).getCodigo(), empleados.get(posicionMedico).getCategoria(), empleados.get(posicionMedico).getNombreCompleto(), empleados.get(posicionMedico).getServicio(), empleados.get(posicionMedico).isTurnicidad(), calcularSueldo(empleados.get(posicionMedico).getCategoria()), nuevasGuardias);
+                        Medico medicoReemplazado = new Medico(empleados.get(posicionMedico).getCodigo(), empleados.get(posicionMedico).getCategoria(), empleados.get(posicionMedico).getNombreCompleto(), empleados.get(posicionMedico).getServicio(), empleados.get(posicionMedico).isTurnicidad(), calcularSueldo(nuevasGuardias, empleados.get(posicionMedico).getCategoria(), empleados.get(posicionMedico).isTurnicidad(), empleados.get), nuevasGuardias);
                         empleados.set(posicionMedico, medicoReemplazado);
                     }else{
                         System.out.println("Posición Incorrecta.");
