@@ -51,7 +51,7 @@ public class App extends Entrada_Salida{
     public static Empleado generarEmpleado(char categoria, String nombreCompleto, String servicio, boolean turnicidad){
         switch (categoria) {
             case 'A':
-                System.out.println("Nº de Guardias Real:");
+                System.out.println("Nº de Guardias Realizadas:");
                 int numeroGuardias = devolverInt();
                 return new Medico(generarCodigo(categoria), categoria, nombreCompleto, servicio, turnicidad, calcularSueldo(categoria, categoria, turnicidad, turnicidad), 0);
             case 'B':
